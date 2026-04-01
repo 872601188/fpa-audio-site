@@ -1,14 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file, Response
+import os
+import requests
+from flask import Flask, render_template, request, redirect, url_for, flash, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-import os
-import requests
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'fpa-audio-site-secret-key-2024'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fpa_audio.db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fpa-audio-site-secret-key-2024')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///instance/fpa_audio.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# 确保 instance 目录存在
+os.makedirs('instance', exist_ok=True)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
