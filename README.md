@@ -2,31 +2,40 @@
 
 基于 Flask + Bootstrap + SQLite 的音频播放网站，支持 OSS 音频在线播放和下载。
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/872601188/fpa-audio-site)
+
 ## 🚀 快速开始
 
-### 方式一：直接运行
+### 方式一：Render 一键部署（推荐）
+点击上方 "Deploy to Render" 按钮，即可自动部署到 Render 平台。
+
+### 方式二：本地运行
 
 ```bash
-cd /root/.openclaw/workspace/fpa-audio-site
-./start.sh
-```
+# 克隆项目
+git clone https://github.com/872601188/fpa-audio-site.git
+cd fpa-audio-site
 
-### 方式二：手动启动
+# 安装依赖
+pip install -r requirements.txt
 
-```bash
-cd /root/.openclaw/workspace/fpa-audio-site
+# 运行应用
 python3 app.py
 ```
+
+访问 http://localhost:5000
 
 ## 🌐 访问地址
 
 - **本地访问**: http://localhost:5000
-- **局域网访问**: http://你的IP:5000
+- **Render 部署**: https://fpa-audio-site.onrender.com （部署后）
 
 ## 🔐 登录信息
 
-- **用户名**: `Admin`
-- **密码**: `Admin123`
+| 字段 | 值 |
+|------|-----|
+| 用户名 | `Admin` |
+| 密码 | `Admin123` |
 
 ## 📁 项目结构
 
@@ -34,12 +43,14 @@ python3 app.py
 fpa-audio-site/
 ├── app.py                 # Flask 主应用
 ├── start.sh               # 启动脚本
+├── requirements.txt       # Python 依赖
+├── render.yaml           # Render 部署配置
 ├── fpa_audio.db           # SQLite 数据库（自动创建）
 ├── templates/
 │   ├── login.html         # 登录页面
 │   ├── index.html         # 音频列表页面
 │   └── player.html        # 音频播放器页面
-└── README.md              # 本文件
+└── README.md              # 项目文档
 ```
 
 ## ✨ 功能特性
@@ -65,7 +76,7 @@ fpa-audio-site/
 | Part 4 | 数据功能审核规则 | ~7 分钟 | 7.1 MB |
 | Part 5 | 典型案例与常见问题 | ~15 分钟 | 15.1 MB |
 
-**音频源**: 阿里云 OSS `meetingweike` bucket
+**音频源**: 阿里云 OSS `meetingweike` bucket  
 **音色**: CosyVoice 复刻音色
 
 ## 🔧 技术栈
@@ -74,6 +85,7 @@ fpa-audio-site/
 - **前端**: Bootstrap 5 + Bootstrap Icons
 - **数据库**: SQLite 3
 - **音频存储**: 阿里云 OSS
+- **部署**: Render (Web Service)
 
 ## 📝 数据库模型
 
@@ -99,7 +111,7 @@ fpa-audio-site/
 
 1. 首次运行会自动创建数据库和默认管理员账号
 2. 音频数据会自动从 OSS 链接初始化
-3. 生产环境请关闭 debug 模式并使用 WSGI 服务器
+3. Render 免费版会在一段时间不活动后休眠，首次访问可能需要等待几秒唤醒
 
 ## 📄 许可证
 
