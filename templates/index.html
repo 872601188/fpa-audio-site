@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>功能点审核培训音频系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: var(--primary-gradient);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        .hero-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+        .audio-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: white;
+            overflow: hidden;
+        }
+        .audio-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .audio-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 32px;
+        }
+        .part-badge {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .btn-play {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+        .btn-play:hover {
+            color: white;
+            transform: scale(1.05);
+        }
+        .btn-download {
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            background: transparent;
+        }
+        .btn-download:hover {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+        .stats-badge {
+            background: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #666;
+            margin-right: 8px;
+        }
+        .progress {
+            height: 8px;
+            border-radius: 10px;
+            background: #e9ecef;
+        }
+        .progress-bar {
+            background: var(--primary-gradient);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-headphones me-2"></i>功能点审核培训音频
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="text-light me-3"><i class="bi bi-person-circle me-1"></i> {{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-box-arrow-right me-1"></i>退出
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="mb-3"><i class="bi bi-music-note-beamed me-3"></i>培训音频资料</h1>
+            <p class="lead mb-0">功能点估算审核规范 - 完整培训课程</p>
+            <div class="mt-4">
+                <span class="stats-badge"><i class="bi bi-collection-play me-1"></i>共 {{ audio_files|length }} 节课程</span>
+                <span class="stats-badge"><i class="bi bi-clock me-1"></i>总时长约40分钟</span>
+                <span class="stats-badge"><i class="bi bi-hdd me-1"></i>总大小约40MB</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="container mb-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="row g-4">
+            {% for audio in audio_files %}
+            <div class="col-md-6 col-lg-4">
+                <div class="audio-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="part-badge">Part {{ audio.part_number }}</span>
+                            <span class="text-muted small"><i class="bi bi-hdd me-1"></i>{{ audio.file_size_mb }} MB</span>
+                        </div>
+                        
+                        <div class="audio-icon">
+                            <i class="bi bi-file-earmark-music"></i>
+                        </div>
+                        
+                        <h5 class="card-title text-center mb-2">{{ audio.title }}</h5>
+                        <p class="card-text text-muted text-center small mb-3">
+                            {{ audio.description }}
+                        </p>
+                        
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <span class="stats-badge"><i class="bi bi-clock me-1"></i>{{ audio.duration_minutes }} 分钟</span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('play', audio_id=audio.id) }}" class="btn btn-play">
+                                <i class="bi bi-play-fill me-2"></i>在线播放
+                            </a>
+                            <a href="{{ url_for('download', audio_id=audio.id) }}" class="btn btn-download">
+                                <i class="bi bi-download me-2"></i>下载音频
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer class="bg-light py-4 mt-5">
+        <div class="container text-center text-muted">
+            <p class="mb-0"><i class="bi bi-c-circle me-1"></i>2026 功能点审核培训音频系统</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
